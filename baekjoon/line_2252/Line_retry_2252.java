@@ -4,7 +4,6 @@ package baekjoon.line_2252;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.LinkedList;
 
 class HeightList {
     int value;  // 진입차수
@@ -30,7 +29,7 @@ class HeightList {
         }
     }
 
-    public int poll(){
+    public int pop(){
         int target = this.next[this.next.length-1];
         int index=0;
         this.cnt_next--;
@@ -69,11 +68,10 @@ public class Line_retry_2252 {
             String nextStr = br.readLine();
             int stuA = Integer.parseInt(nextStr.split(" ")[0]);
             int stuB = Integer.parseInt(nextStr.split(" ")[1]);
-
             // 키가 stuA > stuB 인 것으로 하자. 키 작은 사람이 노드의 꼭대기로 정하자..
             // 그러면 키작은사람의 진출간선은 키큰사람을 향하고, 진입간선은 없다.
-            heights[stuB-1].to(stuA-1);  // stuB가 stuA에게 진출간선 추가, LinkedList개념으로 추가해야함.
-            heights[stuA-1].value++;   // stuA는 stuB로부터 진입간선 추가됨.
+            heights[stuA-1].to(stuB-1);  // stuB가 stuA에게 진출간선 추가, LinkedList개념으로 추가해야함.
+            heights[stuB-1].value++;   // stuA는 stuB로부터 진입간선 추가됨.
         }
 
         // 1. 진입간선이 없는 학생(검사해서 value=0인 학생)은,
@@ -81,14 +79,16 @@ public class Line_retry_2252 {
         // 3. 진출간선과의 연결을 모두 끊는다.(next[i].length 하나줄이고 heights[next[i]]의 value도 하나줄인다)
         // 4. 1~3이 진행된 이후에 다시 1번부터 과정을 반복한다.
         int added=0;
+        boolean[] isAdded = new boolean[heights.length];
         while(added < heights.length){
             for(int i=0; i<heights.length; i++) {
-                if (heights[i].value == 0) {    // 1.
+                if (heights[i].value == 0 && !isAdded[i]) {    // 1.
                     printVal[added] = i+1;  // 2.
+                    isAdded[i] = true;	// printVal에 추가된 정점은 flag=true 
                     added++;
-                    int nextlength = heights[i].next.length;
+                    int nextlength = (heights[i].next==null? 0 : heights[i].next.length);
                     for (int j = 0; j < nextlength; j++) { // 3.
-                        int next = heights[i].poll();  // Stack처럼 구현한 next에서 가장 최근에 쌓인 놈을 꺼낸다.
+                        int next = heights[i].pop();  // Stack처럼 구현한 next에서 가장 최근에 쌓인 놈을 꺼낸다.
                         heights[next].value--;
                     }
                 }
@@ -96,7 +96,12 @@ public class Line_retry_2252 {
         }
 
         for(int j=0; j<printVal.length; j++){
-            System.out.print(printVal[j]+" ");
+            if(j<printVal.length-1){
+            	System.out.print(printVal[j]+" ");
+            }else{
+            	System.out.print(printVal[j]);
+            }
+        	
         }
         br.close();
     }

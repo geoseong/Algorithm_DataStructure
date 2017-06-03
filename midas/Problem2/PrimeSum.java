@@ -1,3 +1,5 @@
+package midas.Problem2;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
