@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 
 class Heap {
     int index;
-    int value;
+    int value;  // 진입차수
     StringBuilder prev = new StringBuilder();
     StringBuilder next = new StringBuilder();
 
