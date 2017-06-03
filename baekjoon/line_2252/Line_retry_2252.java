@@ -68,10 +68,11 @@ public class Line_retry_2252 {
             String nextStr = br.readLine();
             int stuA = Integer.parseInt(nextStr.split(" ")[0]);
             int stuB = Integer.parseInt(nextStr.split(" ")[1]);
-            // 키가 stuA > stuB 인 것으로 하자. 키 작은 사람이 노드의 꼭대기로 정하자..
-            // 그러면 키작은사람의 진출간선은 키큰사람을 향하고, 진입간선은 없다.
-            heights[stuA-1].to(stuB-1);  // stuB가 stuA에게 진출간선 추가, LinkedList개념으로 추가해야함.
-            heights[stuB-1].value++;   // stuA는 stuB로부터 진입간선 추가됨.
+            // 1. 키가 stuA > stuB 인 것으로 하자. 키 작은 사람이 노드의 꼭대기로 정하자..
+            // 2. 그러면 키작은사람의 진출간선은 키큰사람을 향하고, 진입간선은 없다.
+            // 1-2. 틀림. 반대로해서 맞았음.
+            heights[stuA-1].to(stuB-1);  // stuA가 stuB에게 진출간선 추가, LinkedList개념으로 추가.
+            heights[stuB-1].value++;   // stuB는 stuA로부터 진입간선 추가됨.
         }
 
         // 1. 진입간선이 없는 학생(검사해서 value=0인 학생)은,
