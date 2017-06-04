@@ -80,9 +80,10 @@ public class Line_retry_2252 {
         // 3. 진출간선과의 연결을 모두 끊는다.(next[i].length 하나줄이고 heights[next[i]]의 value도 하나줄인다)
         // 4. 1~3이 진행된 이후에 다시 1번부터 과정을 반복한다.
         int added=0;
+        int i=0;
         boolean[] isAdded = new boolean[heights.length];
         while(added < heights.length){
-            for(int i=0; i<heights.length; i++) {
+//            for(int i=0; i<heights.length; i++) {
                 if (heights[i].value == 0 && !isAdded[i]) {    // 1.
                     printVal[added] = i+1;  // 2.
                     isAdded[i] = true;	// printVal에 추가된 정점은 flag=true 
@@ -93,7 +94,9 @@ public class Line_retry_2252 {
                         heights[next].value--;
                     }
                 }
-            }
+//            }
+            i++;
+            if(i == heights.length) i=0;
         }
 
         for(int j=0; j<printVal.length; j++){
