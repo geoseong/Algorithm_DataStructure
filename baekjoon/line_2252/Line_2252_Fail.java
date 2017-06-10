@@ -1,4 +1,4 @@
-package baekjoon.line_2252;
+package baekjoon.Line_2252_Fail;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,12 +15,12 @@ class Heap {
         this.value += value;
     }
 }
-public class Line_2252 {
+public class Line_2252_Fail {
     Heap[] heap;
     String[] printVal;
 
     // 우선순위 큐 : 힙정렬로 진행하는 것이 퍼포먼스 제일 
-    Line_2252() throws IOException {
+    Line_2252_Fail() throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         // N : 인원, M : 비교횟수
@@ -71,6 +71,6 @@ public class Line_2252 {
     }
 
     public static void main(String[] args) throws IOException {
-        new Line_2252();
+        new Line_2252_Fail();
     }
 }
