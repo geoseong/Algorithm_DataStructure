@@ -13,8 +13,8 @@ import java.io.InputStreamReader;
  *** 입력 :
  * 첫째 줄에 K(1≤K≤100), N(1≤N≤100,000)이 주어진다. 다음 줄에는 K개의 소수들이 주어진다.
  * 첫째 줄에 N번째 Humble Number를 출력한다.
- * 4 19
- * 2 3 5 7
+4 19
+2 3 5 7
  */
     /*
     [생각1]
@@ -42,12 +42,11 @@ public class primeMulti_2014 {
         String[] line_one = br.readLine().split(" ");
         int K = Integer.parseInt(line_one[0]);
         int N = Integer.parseInt(line_one[1]);
-        // 입력 Line 2
+        // 입력 Line 2 - 소수 모음
         String[] line_two = br.readLine().split(" ");
 
         Heap result = new Heap();     // 결과값을 저장하고 있는 Heap. array[0] 기본적으로 1 갖고있음.
         int[] intArr = new int[K];  // Queue 탐색하며 비교하기 위한 새로운 int[]
-        int[] multiArr = new int[K];
         Heap[] queues = new Heap[K];   // 입력된소수에 대한 Queue객체 생성.
 
         // 입력된 소수 오름차순 정렬
@@ -67,50 +66,48 @@ public class primeMulti_2014 {
             if(!switched)    break;
         } //end for
 
-        // 입력된 소수에 대한 Queue객체 내용 구성
+        // 입력된 소수에 대한 Queue객체 내용 구성 ( line_two = String배열 )
         for(int i=0; i<line_two.length; i++){
             int queue = Integer.parseInt(line_two[i]);
-            queues[i] = new Heap(queue);
-            intArr[i] = queue;  multiArr[i] = queue;
+            queues[i] = new Heap(queue);    // Q2, Q3, Q5, Q7..
+            result.addHeap(queue);
+            intArr[i] = queue;
         } //end for
 
         // 결과배열에 데이터 추가
-        int idx=-1;
-        int multi_int = 0;
+        int idx=0;
         boolean isExit = false;
         while(true){
             boolean open = false;
             for(int i=0; i<K; i++){ // Q2, Q3, Q5, Q7이 순서대로 삽입된 거라 치면..
-                if(queues[i].array[0]==1){
-                    queues[i].add(queues[i].array[0] * intArr[i]);
-                    result.addHeap(queues[i].array[0] * intArr[i]);
-                    queues[i].remove();
-                    continue;
-                }
-                if(open || intArr[idx] == queues[i].array[0]){
-                    int multi = queues[i].array[0] * multi_int;
-                    queues[i].add(multi);
+                if(open || intArr[idx] == queues[i].getzeroidx()){  // 비교값과 맨 처음 소수 큐[0] 값이 일치하면 각 소수 큐[0]을 비교배열에 넣기.
+                    // 1. 비교값[i](intArr[idx]) * 소수큐[0](queues[i].array[0]) 을 결과배열에 넣고 힙정렬.
+                    int multi = intArr[idx] * queues[i].getzeroidx();
                     result.addHeap(multi);
-                    if(i==0 || open){   // 그럼 flag가 열리게 해야할듯
-                        if(intArr[i] == queues[i].remove()) {    // Queue[0] 이 제거되고 리턴됨.
-                            intArr[i] = queues[i].element();
-                        }
-                        open = true;
+                    open = true;
+                    // 2. 만약 비교값과 맨 처음 소수 큐[0] 값이 일치하면 소수큐에 multi값 추가.
+                    if(i==0 || open){
+                        queues[i].add(multi);
                     }
                 }
-                // N값이 result.arraylength보다 같거나 작으면 break;
-                if(N <= result.arraylength){
+                // N값이 result.arraylength보다 같거나 작으면 결과 출력 후 break;
+                if(N == result.arraylength-1){
                     System.out.println(result.array[N-1]);    // 결과출력. 끝.
                     isExit=true;
+                    break;
                 }
             } //end for
-            if(isExit)  break;
             idx++;
-            if(idx >= K){
-                for(int k=0; k<K; k++)  multiArr[k] = intArr[k];
+            // 3. 소수큐[0](queues[i].getzeroidx()) 는 고정으로 냅두다가 intArr 인덱스 (idx) 가 K가 되면
+            // 소수큐[0]값 제거. 왜냐면 다음 사이클에는 안 쓸 거니까. || intArr의 값들을 소수큐[0]에 집어넣기
+            if(idx == K){
+                for(int i=0; i<K; i++){
+                    queues[i].removeFirst();
+                    intArr[i] = queues[i].getzeroidx();
+                }
                 idx=0;
             }
-            multi_int = multiArr[idx];
+            if(isExit)  break;
         } //end while
     } //end Main()
 } //end class
@@ -122,17 +119,20 @@ class Heap{
     int[] array;
 
     Heap() {
-        this.arraylength = 1;
-        this.array = new int[this.arraylength];
-        this.array[0] = 1;
+//        this.arraylength = 1;
+//        this.array = new int[this.arraylength];
+//        this.array[0] = 1;
     }
     Heap(int queuevalue) {
         this.queuevalue = queuevalue;
         this.arraylength = 1;
         this.array = new int[this.arraylength];
-        this.array[0] = 1;
+        this.array[0] = queuevalue;
     }
 
+    int size(){
+        return this.array.length;
+    }
     void add(int value){
         // 가변길이배열 만듦
         this.arraylength++;
@@ -151,6 +151,10 @@ class Heap{
         this.arraylength++;
         int[] temp = new int[this.arraylength];
 
+        if(this.array == null){
+            this.array = new int[this.arraylength];
+            this.array[0] = value;
+        }
         for(int i=0; i<this.array.length; i++){
             temp[i] = this.array[i];
         }
@@ -208,7 +212,7 @@ class Heap{
         this.array[pointer] = temp;
     }
 
-    int remove(){
+    int removeFirst(){
         int index=0;
         int target = this.array[index];
         this.arraylength--;
@@ -220,7 +224,19 @@ class Heap{
         this.array = temp;   // 자리수가 줄어든 배열을 this.array에 할당.
         return target;
     }
-    int element(){
+    int removeLast(){
+        int index=this.arraylength;
+        int target = this.array[index];
+        this.arraylength--;
+        int[] temp = new int[this.arraylength];  // 배열의 한자리를 줄이기 위한 임시 배열
+        for(int i=0; i<this.arraylength; i++){
+            temp[i] = this.array[i];
+        }
+        this.array = null;  // 길이+1 이 된 배열 영접 위한 기존 배열 초기화
+        this.array = temp;   // 자리수가 줄어든 배열을 this.array에 할당.
+        return target;
+    }
+    int getzeroidx(){
         return this.array[0];
     }
 }
