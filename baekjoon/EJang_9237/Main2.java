@@ -5,7 +5,7 @@ package baekjoon.EJang_9237;
 2 3 4 3
 # output_1
 7
-- 나무 심는 데 1일소요
+- ???? ??? ?? 1????
 
 # input_2
 6
@@ -20,7 +20,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 
-// 내림차순 : Comparator
+// ???????? : Comparator
 class Desc implements Comparator<Integer>{
 	@Override
 	public int compare(Integer o1, Integer o2) {
@@ -37,15 +37,15 @@ public class Main2 {
 		Desc desc = new Desc();
 		
 		
-		// 입력된 값 내림차순하는구간
-		// 나무 자라는 기간이 제일 긴 것을 가장 빨리 심어야 하므로.
+		// ???? ?? ??????????±???
+		// ???? ???? ???? ???? ?? ???? ???? ???? ???? ????.
 		for(int i=0; i<recur; i++){
 			int element = scan.nextInt();
 			trees.add(element);
 		}
 		Collections.sort(trees, desc);
 		
-		int growday=0;		// 나무 자라는 기간
+		int growday=0;		// ???? ???? ??
 		int maxday=0;
 		for(int i=0; i<recur; i++){
 			growday = (i+1) + trees.get(i);
@@ -59,7 +59,7 @@ public class Main2 {
 		new Main2();
 	} //end main
 
-	// 이건 왜 Node.child가 제거가 안될까??
+	// ??? ?? Node.child?? ????? ??????
 	public int getLeadtime(Node tree){
 		int leadtime=0;
 		if(tree.child != null){
